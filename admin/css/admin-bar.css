@@ -1,0 +1,39 @@
+#wp-admin-bar-siteloaded .ab-icon {
+    width: 20px;
+    height: 20px;
+}
+
+#wp-admin-bar-siteloaded .ab-icon svg {
+    width: 90%;
+}
+
+#wp-admin-bar-siteloaded .ab-icon svg .siteloaded-svg-logo-fill {
+    fill: rgba(240, 245, 250, .6);
+}
+
+#wp-admin-bar-siteloaded.hover .ab-icon svg .siteloaded-svg-logo-fill {
+    fill: #00b9eb;
+}
+
+@media screen and (max-width: 782px) {
+    #wp-admin-bar-siteloaded {
+        display: block!important;
+    }
+
+    #wp-admin-bar-siteloaded .ab-icon {
+        width: 52px;
+        height: 46px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #wp-admin-bar-siteloaded .ab-icon svg {
+        width: 59%;
+        flex: 1;
+    }
+}
+
+.featherlight-inner {
+    padding: 25px 15px 15px 15px;
+}

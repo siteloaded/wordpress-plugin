@@ -6,6 +6,24 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit88cdbed5e7e71e292274161a606f6082
 {
+    public static $files = array (
+        '5b154887902198b16314243c6e0e3e19' => __DIR__ . '/..' . '/pguardiario/phpuri/phpuri.php',
+    );
+
+    public static $prefixLengthsPsr4 = array (
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
+    );
+
     public static $prefixesPsr0 = array (
         'M' => 
         array (
@@ -17,47 +35,49 @@ class ComposerStaticInit88cdbed5e7e71e292274161a606f6082
     );
 
     public static $classMap = array (
-        'Milo\\Github\\Api' => __DIR__ . '/..' . '/milo/github-api/src/Github/Api.php',
-        'Milo\\Github\\ApiException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\BadRequestException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\ForbiddenException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\Helpers' => __DIR__ . '/..' . '/milo/github-api/src/Github/Helpers.php',
-        'Milo\\Github\\Http\\AbstractClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/AbstractClient.php',
-        'Milo\\Github\\Http\\BadResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\Http\\CachedClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/CachedClient.php',
-        'Milo\\Github\\Http\\CurlClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/CurlClient.php',
-        'Milo\\Github\\Http\\IClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/IClient.php',
-        'Milo\\Github\\Http\\Message' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Message.php',
-        'Milo\\Github\\Http\\Request' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Request.php',
-        'Milo\\Github\\Http\\Response' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Response.php',
-        'Milo\\Github\\Http\\StreamClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/StreamClient.php',
-        'Milo\\Github\\IException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\InvalidResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\JsonException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\LogicException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\MissingParameterException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\NotFoundException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\OAuth\\Configuration' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Configuration.php',
-        'Milo\\Github\\OAuth\\Login' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Login.php',
-        'Milo\\Github\\OAuth\\LoginException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\OAuth\\Token' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Token.php',
-        'Milo\\Github\\Paginator' => __DIR__ . '/..' . '/milo/github-api/src/Github/Paginator.php',
-        'Milo\\Github\\RateLimitExceedException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\RuntimeException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\Sanity' => __DIR__ . '/..' . '/milo/github-api/src/Github/Sanity.php',
-        'Milo\\Github\\Storages\\FileCache' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/FileCache.php',
-        'Milo\\Github\\Storages\\ICache' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/ICache.php',
-        'Milo\\Github\\Storages\\ISessionStorage' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/ISessionStorage.php',
-        'Milo\\Github\\Storages\\MissingDirectoryException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\Storages\\SessionStorage' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/SessionStorage.php',
-        'Milo\\Github\\UnauthorizedException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\UnexpectedResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
-        'Milo\\Github\\UnprocessableEntityException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Api' => __DIR__ . '/..' . '/milo/github-api/src/Github/Api.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\ApiException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\BadRequestException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\ForbiddenException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Helpers' => __DIR__ . '/..' . '/milo/github-api/src/Github/Helpers.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\AbstractClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/AbstractClient.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\BadResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\CachedClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/CachedClient.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\CurlClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/CurlClient.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\IClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/IClient.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\Message' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Message.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\Request' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Request.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\Response' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/Response.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Http\\StreamClient' => __DIR__ . '/..' . '/milo/github-api/src/Github/Http/StreamClient.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\IException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\InvalidResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\JsonException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\LogicException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\MissingParameterException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\NotFoundException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\OAuth\\Configuration' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Configuration.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\OAuth\\Login' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Login.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\OAuth\\LoginException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\OAuth\\Token' => __DIR__ . '/..' . '/milo/github-api/src/Github/OAuth/Token.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Paginator' => __DIR__ . '/..' . '/milo/github-api/src/Github/Paginator.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\RateLimitExceedException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\RuntimeException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Sanity' => __DIR__ . '/..' . '/milo/github-api/src/Github/Sanity.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Storages\\FileCache' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/FileCache.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Storages\\ICache' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/ICache.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Storages\\ISessionStorage' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/ISessionStorage.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Storages\\MissingDirectoryException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\Storages\\SessionStorage' => __DIR__ . '/..' . '/milo/github-api/src/Github/Storages/SessionStorage.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\UnauthorizedException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\UnexpectedResponseException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
+        'SiteLoaded\\Vendor\\Milo\\Github\\UnprocessableEntityException' => __DIR__ . '/..' . '/milo/github-api/src/Github/exceptions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit88cdbed5e7e71e292274161a606f6082::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit88cdbed5e7e71e292274161a606f6082::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit88cdbed5e7e71e292274161a606f6082::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit88cdbed5e7e71e292274161a606f6082::$classMap;
 

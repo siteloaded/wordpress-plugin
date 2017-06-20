@@ -16,7 +16,7 @@ function siteloaded_debug_log($msg, $debug = FALSE) {
         return;
     }
 
-    if ($debug === TRUE && SITELOADED_DEBUG === FALSE) {
+    if ($debug === TRUE && SITELOADED_ENV !== "DEV") {
         return;
     }
 

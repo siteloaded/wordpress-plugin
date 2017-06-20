@@ -20,7 +20,7 @@ Quick Start
 ===========
 List all emojis used on Github.
 ```php
-use SiteLoaded\Vendor\Milo\Github;
+use Milo\Github;
 
 $api = new Github\Api;
 $response = $api->get('/emojis');

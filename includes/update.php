@@ -1,9 +1,6 @@
 <?php
 defined('ABSPATH') or exit;
 
-use SiteLoaded\Vendor\Milo\Github;
-use SiteLoaded\Vendor\Michelf\Markdown;
-
 add_filter('pre_set_site_transient_update_plugins', 'siteloaded_check_for_updates');
 add_filter('plugins_api', 'siteloaded_fill_version_details_popup', 10, 3);
 
@@ -18,14 +15,15 @@ function siteloaded_check_for_updates($transient) {
         return $transient;
     }
 
+    $current = get_plugin_data(SITELOADED_DIR . SITELOADED_SLUG . '.php')['Version'];
     $ver = ltrim($rel->tag_name, 'v');
-    if (version_compare(SITELOADED_VERSION, $ver, '>=')) {
-        siteloaded_debug('already running version ' . $ver . ' or later (' . SITELOADED_VERSION . ')');
+
+    if (version_compare($current, $ver, '>=')) {
+        siteloaded_debug('already running version ' . $ver . ' or later (' . $current . ')');
         return $transient;
     }
 
     $update = new stdClass();
-
     $update->slug = SITELOADED_SLUG . '.php';
     $update->new_version = $ver;
     $update->url = $rel->html_url;
@@ -48,7 +46,7 @@ function siteloaded_fill_version_details_popup($result, $action, $args) {
     }
 
     $data = get_plugin_data(SITELOADED_DIR . SITELOADED_SLUG . '.php');
-    $html_desc = Markdown::defaultTransform($rel->body);
+    $html_desc = SiteLoaded\Vendor\Michelf\Markdown::defaultTransform($rel->body);
 
     $plugin = array(
         'name'              => $data['Name'],
@@ -92,7 +90,7 @@ function siteloaded_fetch_latest_release_infos() {
         return $rel;
     }
 
-    $github = new Github\Api;
+    $github = new SiteLoaded\Vendor\Milo\Github\Api;
     $response = $github->get("/repos/:org/:repo/releases/latest", array(
         'org' => SITELOADED_SLUG,
         'repo' => SITELOADED_GITHUB_REPO,
