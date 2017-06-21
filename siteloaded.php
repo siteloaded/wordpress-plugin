@@ -24,9 +24,6 @@ define('SITELOADED_ENV',                        WP_CONTENT_DIR === '/vagrant/wor
 define('SITELOADED_GITHUB_REPO',                'wordpress-plugin');
 define('SITELOADED_CONTROLPANEL_URL',           SITELOADED_ENV === "DEV" ? 'http://cp.siteloaded.dev/' : 'https://cp.siteloaded.com/');
 
-
-require_once(SITELOADED_DIR . 'vendor/milo/github-api/src/github-api.php');
-require_once(SITELOADED_DIR . 'vendor/michelf/php-markdown/Michelf/Markdown.inc.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Elements.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Entities.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Exception.php');
@@ -48,8 +45,12 @@ require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Serializer/Out
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Serializer/Traverser.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5.php');
 require_once(SITELOADED_DIR . 'vendor/pguardiario/phpuri/phpuri.php');
+require_once(SITELOADED_DIR . 'vendor/milo/github-api/src/github-api.php');
+require_once(SITELOADED_DIR . 'vendor/michelf/php-markdown/Michelf/Markdown.inc.php');
 
 require_once(SITELOADED_DIR . 'includes/log.php');
+require_once(SITELOADED_DIR . 'includes/http.php');
 require_once(SITELOADED_DIR . 'includes/update.php');
 require_once(SITELOADED_DIR . 'includes/fs.php');
+require_once(SITELOADED_DIR . 'includes/cache.php');
 require_once(SITELOADED_DIR . 'includes/admin.php');
