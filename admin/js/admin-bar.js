@@ -6,15 +6,16 @@
 
         $.post(siteloaded_admin_bar_script.ajaxUrl, { 'action': siteloaded_admin_bar_script.purgeAllAction })
             .always(function(res) {
-                if (res.status === "ok") {
-                    $.featherlight(siteloaded_admin_bar_script.succeededMessage, { type: 'text' });
-                    setTimeout(function() {
-                        var opened = $.featherlight.current();
-                        opened && opened.close();
-                    }, 1500);
+                if (res.code !== 200) {
+                    $.featherlight(siteloaded_admin_bar_script.failedMessage, { type: 'text' });
                     return;
                 }
-                $.featherlight(siteloaded_admin_bar_script.failedMessage, { type: 'text' });
+
+                $.featherlight(siteloaded_admin_bar_script.succeededMessage, { type: 'text' });
+                setTimeout(function() {
+                    var opened = $.featherlight.current();
+                    opened && opened.close();
+                }, 1500);
             });
     }
 

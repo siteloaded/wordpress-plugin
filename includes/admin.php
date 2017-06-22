@@ -9,7 +9,7 @@ add_action('wp_ajax_siteloaded_admin_bar_purge_all', 'siteloaded_admin_bar_purge
 // add_action('admin_menu', 'siteloaded_admin_menu', PHP_INT_MAX);
 // add_action('admin_notices', 'siteloaded_admin_notices_no_subscription');
 // add_action('admin_enqueue_scripts', 'siteloaded_admin_panel_enqueue_scripts');
-// add_action('wp_ajax_siteloaded_set_subscription', 'siteloaded_set_subscription');
+// add_action('wp_ajax_siteloaded_admin_set_subscription', 'siteloaded_admin_set_subscription');
 
 function siteloaded_admin_bar_menu($wp_admin_bar) {
     if (is_network_admin() || !current_user_can('manage_options')) {
@@ -56,37 +56,34 @@ function siteloaded_admin_bar_purge_all() {
 
     if (!current_user_can('manage_options')) {
         header( "Content-Type: application/json" );
-        echo '{"status":"permission denied"}';
+        echo '{"code":401}';
         wp_die();
     }
 
-    siteloaded_close_http_client_connection('application/json', '{"status":"ok"}');
-
+    siteloaded_close_http_client_connection('application/json', '{"code":200}');
     siteloaded_debug('warming up cache for blog ' . $blog_id);
     // TODO, purge here...
     siteloaded_cache_warmup($blog_id);
     siteloaded_debug('cache warming done');
-
-    // wp_die();
 }
 
-// function siteloaded_admin_menu() {
-//     if (is_network_admin()) {
-//         return;
-//     }
+function siteloaded_admin_menu() {
+    if (is_network_admin() || !current_user_can('manage_options')) {
+        return;
+    }
 
-//     $logo = 'data:image/svg+xml;base64,' . base64_encode(siteloaded_get_svg_logo('#82878c'));
+    $logo = 'data:image/svg+xml;base64,' . base64_encode(siteloaded_get_svg_logo('#82878c'));
 
-//     add_menu_page(
-//         SITELOADED_NAME,            // page name
-//         SITELOADED_NAME,            // button label
-//         'manage_options',           // capability required
-//         SITELOADED_SLUG,            // menu slug
-//         'siteloaded_cp_content',    // page content
-//         $logo,                      // logo
-//         null                        // position
-//     );
-// }
+    add_menu_page(
+        SITELOADED_NAME,            // page name
+        SITELOADED_NAME,            // button label
+        'manage_options',           // capability required
+        SITELOADED_SLUG,            // menu slug
+        'siteloaded_cp_content',    // page content
+        $logo,                      // logo
+        null                        // position
+    );
+}
 
 function siteloaded_cp_content() {
     $subscription = get_option('siteloaded_subscription_id');
@@ -100,49 +97,68 @@ function siteloaded_cp_content() {
     <?php
 }
 
-// function siteloaded_admin_panel_enqueue_scripts($hook) {
-//     if ($hook !== 'toplevel_page_' . SITELOADED_SLUG) {
-//         return;
-//     }
+function siteloaded_admin_panel_enqueue_scripts($hook) {
+    if (is_network_admin() || !current_user_can('manage_options')) {
+        return;
+    }
 
-//     wp_enqueue_script('siteloaded_admin_panel_script', SITELOADED_URL . 'admin/js/admin-panel.js', array('jquery'));
-//     wp_enqueue_style('siteloaded_admin_panel_style', SITELOADED_URL . 'admin/css/admin-panel.css');
+    if ($hook !== 'toplevel_page_' . SITELOADED_SLUG) {
+        return;
+    }
 
-//     wp_localize_script('siteloaded_admin_panel_script', 'siteloaded_admin_panel_script', array(
-//         'validReferrer' => rtrim(SITELOADED_CONTROLPANEL_URL, "/"),
-//         'setSubscriptionAction' => 'siteloaded_set_subscription'
-//     ));
-// }
+    wp_enqueue_script('siteloaded_admin_panel_script', SITELOADED_URL . 'admin/js/admin-panel.js', array('jquery'));
+    wp_enqueue_style('siteloaded_admin_panel_style', SITELOADED_URL . 'admin/css/admin-panel.css');
 
-// function siteloaded_set_subscription() {
-//     if (!current_user_can('administrator')) {
-//         echo 401;
-//         wp_die();
-//     }
+    wp_localize_script('siteloaded_admin_panel_script', 'siteloaded_admin_panel_script', array(
+        'validReferrer' => rtrim(SITELOADED_CONTROLPANEL_URL, "/"),
+        'setSubscriptionAction' => 'siteloaded_admin_set_subscription'
+    ));
+}
 
-//     if (!isset($_POST['subscription_id'])) {
-//         echo 422;
-//         wp_die();
-//     }
+function siteloaded_admin_set_subscription() {
+    // TODO, respond with content-type json
+    // and a proper response like in function `siteloaded_admin_bar_purge_all`
 
-//     $id = $_POST['subscription_id'];
+    // TODO, test multisite, what happens
 
-//     if (get_option('siteloaded_subscription_id') === $id || update_option('siteloaded_subscription_id', $id, true) === true) {
-//         echo 200;
-//         wp_die();
-//     }
+    if (!current_user_can('manage_options')) {
+        echo 401;
+        wp_die();
+    }
 
-//     echo 500;
-//     wp_die();
-// }
+    if (!isset($_POST['subscription_id'])) {
+        echo 422;
+        wp_die();
+    }
 
-// function siteloaded_admin_notices_no_subscription() {
-//     if (get_option('siteloaded_subscription_id') !== false) {
-//         return;
-//     }
+    $id = $_POST['subscription_id'];
 
-// 	$class = 'notice notice-info';
-// 	$message = __('Thank you for using Site Loaded. You must now create an account or login to an existing one to link your subscription to your blog. Click <a href="' . admin_url('admin.php?page=' . SITELOADED_SLUG) . '">here</a> to do so.', 'siteloaded');
+    if (get_option('siteloaded_subscription_id') === $id || update_option('siteloaded_subscription_id', $id, true) === true) {
+        echo 200;
+        wp_die();
+    }
 
-// 	printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
-// }
+    echo 500;
+    wp_die();
+}
+
+function siteloaded_admin_notices_no_subscription() {
+    global $pagenow;
+
+    if (is_network_admin() || !current_user_can('manage_options')) {
+        return;
+    }
+
+    if ($pagenow === 'admin.php' && isset($_GET['page']) && $_GET['page'] === SITELOADED_SLUG) {
+        return;
+    }
+
+    if (get_option('siteloaded_subscription_id') !== false) {
+        return;
+    }
+
+	$class = 'notice notice-info';
+	$message = __('Thank you for using Site Loaded. You must now create an account or login to an existing one to link your subscription to your blog. Click <a href="' . admin_url('admin.php?page=' . SITELOADED_SLUG) . '">here</a> to do so.', 'siteloaded');
+
+	printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class),  $message);
+}
