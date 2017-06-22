@@ -1,16 +1,12 @@
 <?php
 defined('ABSPATH') or exit;
 
-function siteloaded_cache_dir($blog_id) {
-    return SITELOADED_CACHE_DIR . $blog_id . '/';
-}
-
 function siteloaded_cache_safe_purge($blog_id) {
     $base = siteloaded_cache_dir($blog_id);
 
     siteloaded_debug('safetly purging cache for blog ' . $blog_id . ' at ' . $base);
 
-    $oldest = PHP_INT_MAX;
+    $more_recent = PHP_INT_MAX;
 
     foreach (glob("$base*.html", GLOB_NOSORT) as $filename) {
         $f = new siteloaded_file_access();
@@ -23,8 +19,8 @@ function siteloaded_cache_safe_purge($blog_id) {
 
         $stat = fstat($fp);
         $mtime = $stat['mtime'];
-        if ($mtime < $oldest) {
-            $oldest = $mtime;
+        if ($mtime < $more_recent) {
+            $more_recent = $mtime;
         }
 
         if (!@unlink($filename)) {
@@ -34,7 +30,7 @@ function siteloaded_cache_safe_purge($blog_id) {
         $f->close();
     }
 
-    if ($oldest != PHP_INT_MAX) {
+    if ($more_recent !== PHP_INT_MAX) {
         foreach (glob("$base*.{css,js}", GLOB_NOSORT | GLOB_BRACE) as $filename) {
             $f = new siteloaded_file_access();
             $fp = $f->open_excl($filename, 'rb');
@@ -46,7 +42,9 @@ function siteloaded_cache_safe_purge($blog_id) {
 
             $stat = fstat($fp);
             $mtime = $stat['mtime'];
-            if ($mtime < $oldest) {
+            if ($mtime < $more_recent) {
+                // don't delete static resources that have been created
+                // after we started the purge...
                 if (!@unlink($filename)) {
                     sl_log('could not delete file for purge: ' . $filename);
                 }
@@ -55,6 +53,34 @@ function siteloaded_cache_safe_purge($blog_id) {
             $f->close();
         }
     }
+}
+
+function siteloaded_cache_destroy($blog_id) {
+    $base = siteloaded_cache_dir($blog_id);
+
+    siteloaded_debug('destroying cache for blog ' . $blog_id . ' at ' . $base);
+
+    if (!is_dir($base)) {
+        return;
+    }
+
+    foreach (glob("$base*.{css,js,html}", GLOB_NOSORT | GLOB_BRACE) as $filename) {
+        $f = new siteloaded_file_access();
+        $fp = $f->open_excl($filename, 'rb');
+
+        if ($fp === FALSE) {
+            sl_log('could not open file for purge: ' . $filename);
+            continue;
+        }
+
+        if (!@unlink($filename)) {
+            sl_log('could not delete file for purge: ' . $filename);
+        }
+
+        $f->close();
+    }
+
+    @rmdir($base);
 }
 
 function siteloaded_cache_warmup($blog_id) {
@@ -137,4 +163,8 @@ function siteloaded_cache_warmup($blog_id) {
         }
         usleep($inbetween_sleep);
     }
+}
+
+function siteloaded_cache_dir($blog_id) {
+    return SITELOADED_CACHE_DIR . $blog_id . '/';
 }

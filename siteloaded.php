@@ -23,6 +23,10 @@ define('SITELOADED_URL',                        trailingslashit(plugins_url(SITE
 define('SITELOADED_ENV',                        WP_CONTENT_DIR === '/vagrant/wordpress/wp-content' ? "DEV" : "PROD");
 define('SITELOADED_GITHUB_REPO',                'wordpress-plugin');
 define('SITELOADED_CONTROLPANEL_URL',           SITELOADED_ENV === "DEV" ? 'http://cp.siteloaded.dev/' : 'https://cp.siteloaded.com/');
+define('SITELOADED_MAIN_PLUGIN_FILE',           plugin_basename(__FILE__));
+define('SITELOADED_CACHE_HOOK',                 SITELOADED_DIR . 'includes/advanced-cache-hook.php');
+define('SITELOADED_ADV_CACHE_FILE',             SITELOADED_CONTENT_DIR . 'advanced-cache.php');
+define('SITELOADED_WP_DIR',                     trailingslashit(ABSPATH));
 
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Elements.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Entities.php');
@@ -54,3 +58,6 @@ require_once(SITELOADED_DIR . 'includes/update.php');
 require_once(SITELOADED_DIR . 'includes/fs.php');
 require_once(SITELOADED_DIR . 'includes/cache.php');
 require_once(SITELOADED_DIR . 'includes/admin.php');
+require_once(SITELOADED_DIR . 'includes/activation.php');
+require_once(SITELOADED_DIR . 'includes/multisite.php');
+require_once(SITELOADED_DIR . 'includes/optimize.php');

@@ -11,7 +11,7 @@ class siteloaded_lock_file
             return FALSE;
         }
 
-        $this->path = SL_TEMP_DIR . $id . '.lock';
+        $this->path = SITELOADED_TEMP_DIR . $id . '.lock';
         $this->fp = @fopen($this->path, 'wb');
         if ($this->fp === FALSE) {
             $this->path = "";
@@ -140,4 +140,95 @@ function siteloaded_get_svg_logo($fill = '#fff') {
 EOD;
 
     return $logo;
+}
+
+function siteloaded_ensure_advanced_cache_file() {
+    $hook = SITELOADED_CACHE_HOOK;
+    $wp_content_dir = trailingslashit(WP_CONTENT_DIR);
+    $multisite = var_export(is_multisite(), TRUE);
+    $sites = var_export(siteloaded_network_get_blogs(TRUE), TRUE);
+
+    $content = <<<EOT
+<?php
+defined('ABSPATH') or exit;
+
+// Installed by Site Loaded
+// DO NOT EDIT
+
+if (defined('WP_INSTALLING') && WP_INSTALLING) {
+    return;
+}
+
+define('SITELOADED_ADVC_HOOK_INSTALLED', TRUE);
+define('SITELOADED_ADVC_LOCAL_CACHE_DIR', '{$wp_content_dir}cache/siteloaded/');
+define('SITELOADED_ADVC_NETWORK_ENABLED', $multisite);
+define('SITELOADED_ADVC_NETWORK_SITES',   $sites);
+
+require('{$hook}');
+
+EOT;
+
+    siteloaded_debug('writing advanced-cache.php file');
+    if (file_put_contents(SITELOADED_ADV_CACHE_FILE, $content, LOCK_EX) === FALSE) {
+        siteloaded_log('could not set ' . SITELOADED_ADV_CACHE_FILE);
+        return FALSE;
+    }
+
+    if (!defined('SITELOADED_ADVC_HOOK_INSTALLED')) {
+        define('SITELOADED_ADVC_HOOK_INSTALLED', TRUE);
+    }
+
+    return TRUE;
+}
+
+function siteloaded_remove_advanced_cache_file() {
+    if (!file_exists(SITELOADED_ADV_CACHE_FILE)) {
+        siteloaded_log('could not find advanced-cached.php located ' . SITELOADED_ADV_CACHE_FILE);
+        return FALSE;
+    }
+
+    if (!@unlink(SITELOADED_ADV_CACHE_FILE)) {
+        siteloaded_log('could not remove advanced-cached.php located ' . SITELOADED_ADV_CACHE_FILE);
+        return FALSE;
+    };
+
+    siteloaded_debug('removed advanced-cached.php located ' . SITELOADED_ADV_CACHE_FILE);
+    return TRUE;
+}
+
+function siteloaded_ensure_config($key, $val) {
+    if (defined($key) && constant($key) === $val) {
+        siteloaded_log($key . ':' . $val . ' already defined to ' . var_export($val, TRUE));
+        return TRUE;
+    }
+
+    $content = @file_get_contents(SITELOADED_WP_DIR . 'wp-config.php');
+    if (!$content) {
+        siteloaded_log('unable to read ' . SITELOADED_WP_DIR . 'wp-config.php');
+        return FALSE;
+    }
+
+    $val = var_export($val, TRUE);
+    if (preg_match('/\s*define.*' . $key .'.*,.*/', $content)) {
+        $content = preg_replace('/\s*(define.*' . $key .'.*,).*(\).*)/', PHP_EOL . '$1 ' . $val .'$2', $content, 1);
+    } else {
+        $content = preg_replace('/(.*)<\?php(.*)/', '$1<?php$2' . PHP_EOL . 'define(\'' . $key . '\', ' . $val . ');', $content);
+    }
+
+    if (is_null($content)) {
+        siteloaded_log('could not put ' . $key . ' in wp-config.php');
+        return FALSE;
+    }
+
+    if (!@file_put_contents(SITELOADED_WP_DIR . 'wp-config.php', $content, LOCK_EX)) {
+        siteloaded_log('could not save wp-config.php');
+        return FALSE;
+    }
+
+    if (!defined($key)) {
+        define($key, $val);
+    }
+
+    siteloaded_log('defined ' . $key . ' -> ' . $val . ' to ' . SITELOADED_WP_DIR . 'wp-config.php');
+    return TRUE;
 }

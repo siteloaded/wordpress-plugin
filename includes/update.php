@@ -31,7 +31,7 @@ function siteloaded_check_for_updates($transient) {
     $update->upgrade_notice = $rel->name;
 
     siteloaded_log('update ' . $ver . ' found');
-    $transient->response[SITELOADED_SLUG . '/' . SITELOADED_SLUG . '.php'] = $update;
+    $transient->response[SITELOADED_MAIN_PLUGIN_FILE] = $update;
     return $transient;
 }
 
@@ -50,7 +50,7 @@ function siteloaded_fill_version_details_popup($result, $action, $args) {
 
     $plugin = array(
         'name'              => $data['Name'],
-        'slug'              => SITELOADED_SLUG . '/' . SITELOADED_SLUG . '.php',
+        'slug'              => SITELOADED_MAIN_PLUGIN_FILE,
         'version'           => ltrim($rel->tag_name, 'v'),
         'author'            => $data['Author'],
         'author_profile'    => $data['AuthorURI'],
