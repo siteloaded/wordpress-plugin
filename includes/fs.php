@@ -232,3 +232,40 @@ function siteloaded_ensure_config($key, $val) {
     siteloaded_log('defined ' . $key . ' -> ' . $val . ' to ' . SITELOADED_WP_DIR . 'wp-config.php');
     return TRUE;
 }
+
+function siteloaded_ensure_htaccess_file($force = FALSE) {
+    $path =  SITELOADED_CACHE_DIR . '.htaccess';
+
+    if (!is_file($path) || $force) {
+        $htaccess = <<<EOT
+<IfModule headers_module>
+Header unset Pragma
+FileETag None
+Header unset ETag
+</IfModule>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+<FilesMatch "\.(js|css)$">
+ExpiresDefault "access plus 1 year"
+</FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+<FilesMatch "\.(js|css)$">
+SetOutputFilter DEFLATE
+</FilesMatch>
+</IfModule>
+EOT;
+
+        if (!is_dir(SITELOADED_CACHE_DIR)) {
+            $recursive = TRUE;
+            mkdir(SITELOADED_CACHE_DIR, 0755, $recursive);
+        }
+
+        siteloaded_debug('writing .htaccess file');
+        if (file_put_contents($path, $htaccess, LOCK_EX) === FALSE) {
+            siteloaded_log('could not write asset ' . $path);
+        }
+    }
+}

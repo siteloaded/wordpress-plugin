@@ -5,6 +5,7 @@ add_action('admin_bar_menu', 'siteloaded_admin_bar_menu', 100, 1);
 add_action('admin_enqueue_scripts', 'siteloaded_admin_bar_enqueue_scripts');
 add_action('wp_enqueue_scripts', 'siteloaded_admin_bar_enqueue_scripts');
 add_action('wp_ajax_siteloaded_admin_bar_purge_all', 'siteloaded_admin_bar_purge_all');
+add_action('admin_init', 'siteloaded_ensure_valid_config');
 // TODO: disabled during beta
 // add_action('admin_menu', 'siteloaded_admin_menu', PHP_INT_MAX);
 // add_action('admin_notices', 'siteloaded_admin_notices_no_subscription');
@@ -159,4 +160,35 @@ function siteloaded_admin_notices_no_subscription() {
 	$message = __('Thank you for using Site Loaded. You must now create an account or login to an existing one to link your subscription to your blog. Click <a href="' . admin_url('admin.php?page=' . SITELOADED_SLUG) . '">here</a> to do so.', 'siteloaded');
 
 	printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class),  $message);
+}
+
+function siteloaded_ensure_valid_config() {
+    if (defined('DOING_AJAX') || defined('DOING_AUTOSAVE')) {
+        return;
+    }
+
+    $current = get_plugin_data(SITELOADED_DIR . SITELOADED_SLUG . '.php')['Version'];
+
+    if (get_site_option('siteloaded_just_activated') !== FALSE) {
+        update_site_option('siteloaded_version', $current);
+        delete_site_option('siteloaded_just_activated');
+        return;
+    }
+
+    if (!defined('SITELOADED_ADVC_HOOK_INSTALLED')) {
+        siteloaded_debug('invalid advanced-cache.php file detected');
+        siteloaded_ensure_advanced_cache_file();
+    }
+
+    if (!defined('WP_CACHE') || WP_CACHE !== TRUE) {
+        siteloaded_debug('WP_CACHE not set');
+        siteloaded_ensure_config('WP_CACHE', TRUE);
+    }
+
+    if (get_site_option('siteloaded_version') !== $current) {
+        update_site_option('siteloaded_version', $current);
+        siteloaded_debug('plugin update detected');
+        siteloaded_ensure_advanced_cache_file();
+        siteloaded_ensure_htaccess_file(TRUE);
+    }
 }

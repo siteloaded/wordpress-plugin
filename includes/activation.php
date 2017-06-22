@@ -13,6 +13,7 @@ function siteloaded_activated() {
     });
     siteloaded_ensure_advanced_cache_file();
     siteloaded_ensure_config('WP_CACHE', TRUE);
+    add_site_option('siteloaded_just_activated', 'TRUE');
     siteloaded_log('activated');
 }
 

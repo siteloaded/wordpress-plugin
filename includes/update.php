@@ -69,7 +69,7 @@ function siteloaded_fill_version_details_popup($result, $action, $args) {
 
 function siteloaded_ratelimit_cando($key, $interval) {
     $now = time();
-    $last = get_transient($key);
+    $last = get_site_transient($key);
     if ($last === FALSE) {
         $last = 0;
     }
@@ -79,7 +79,7 @@ function siteloaded_ratelimit_cando($key, $interval) {
         return FALSE;
     }
 
-    set_transient($key, $now, $interval + 15);
+    set_site_transient($key, $now, $interval + 15);
     return TRUE;
 }
 

@@ -1,6 +1,14 @@
 <?php
 defined('ABSPATH') or exit;
 
+add_action('wpmu_new_blog', 'siteloaded_ensure_advanced_cache_file', 10, 1);
+add_action('make_delete_blog', 'siteloaded_cache_destroy', 10, 1);
+add_action('make_undelete_blog', 'siteloaded_cache_destroy', 10, 1);
+add_action('archive_blog', 'siteloaded_cache_destroy', 10, 1);
+add_action('unarchive_blog', 'siteloaded_cache_destroy', 10, 1);
+add_action('make_spam_blog', 'siteloaded_cache_destroy', 10, 1);
+add_action('make_ham_blog', 'siteloaded_cache_destroy', 10, 1);
+
 function siteloaded_network_each_blog(callable $callback) {
     function plugin_is_active($blog_id) {
         $plugins = get_blog_option($blog_id, 'active_plugins');
@@ -45,10 +53,6 @@ function siteloaded_network_get_blogs($force = FALSE) {
         // WordPress < 4.6
         $sites = wp_get_sites(array('limit' => PHP_INT_MAX));
     }
-
-    $sites = array_filter($sites, function($s) {
-        return intval($s['deleted']) === 0;
-    });
 
     $sites = array_map(function($s) {
         foreach (array('registered', 'last_updated', 'public', 'archived', 'mature', 'spam', 'deleted', 'lang_id') as $p) {
