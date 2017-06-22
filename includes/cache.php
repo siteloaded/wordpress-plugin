@@ -1,6 +1,62 @@
 <?php
 defined('ABSPATH') or exit;
 
+function siteloaded_cache_dir($blog_id) {
+    return SITELOADED_CACHE_DIR . $blog_id . '/';
+}
+
+function siteloaded_cache_safe_purge($blog_id) {
+    $base = siteloaded_cache_dir($blog_id);
+
+    siteloaded_debug('safetly purging cache for blog ' . $blog_id . ' at ' . $base);
+
+    $oldest = PHP_INT_MAX;
+
+    foreach (glob("$base*.html", GLOB_NOSORT) as $filename) {
+        $f = new siteloaded_file_access();
+        $fp = $f->open_excl($filename, 'rb');
+
+        if ($fp === FALSE) {
+            sl_log('could not open file for purge: ' . $filename);
+            continue;
+        }
+
+        $stat = fstat($fp);
+        $mtime = $stat['mtime'];
+        if ($mtime < $oldest) {
+            $oldest = $mtime;
+        }
+
+        if (!@unlink($filename)) {
+            sl_log('could not delete file for purge: ' . $filename);
+        }
+
+        $f->close();
+    }
+
+    if ($oldest != PHP_INT_MAX) {
+        foreach (glob("$base*.{css,js}", GLOB_NOSORT | GLOB_BRACE) as $filename) {
+            $f = new siteloaded_file_access();
+            $fp = $f->open_excl($filename, 'rb');
+
+            if ($fp === FALSE) {
+                sl_log('could not open file for purge: ' . $filename);
+                continue;
+            }
+
+            $stat = fstat($fp);
+            $mtime = $stat['mtime'];
+            if ($mtime < $oldest) {
+                if (!@unlink($filename)) {
+                    sl_log('could not delete file for purge: ' . $filename);
+                }
+            }
+
+            $f->close();
+        }
+    }
+}
+
 function siteloaded_cache_warmup($blog_id) {
     $max_visits = 5000;                 // safety net, stop after 5k visits
     $inbetween_sleep = 500000;          // 500ms between pages

@@ -61,10 +61,8 @@ function siteloaded_admin_bar_purge_all() {
     }
 
     siteloaded_close_http_client_connection('application/json', '{"code":200}');
-    siteloaded_debug('warming up cache for blog ' . $blog_id);
-    // TODO, purge here...
+    siteloaded_cache_safe_purge($blog_id);
     siteloaded_cache_warmup($blog_id);
-    siteloaded_debug('cache warming done');
 }
 
 function siteloaded_admin_menu() {
