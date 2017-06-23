@@ -10,7 +10,7 @@ function siteloaded_activated() {
         if (!$active || $me) {
             siteloaded_cache_destroy($blog_id);
         }
-    });
+    }, 'activating');
     siteloaded_ensure_advanced_cache_file();
     siteloaded_ensure_config('WP_CACHE', TRUE);
     add_site_option('siteloaded_just_activated', 'TRUE');
@@ -25,7 +25,7 @@ function siteloaded_deactivated() {
         if (!$active || $me) {
             siteloaded_cache_destroy($blog_id);
         }
-    });
+    }, 'deactivating');
     if ($no_instance_remaining === TRUE) {
         siteloaded_ensure_config('WP_CACHE', FALSE);
         siteloaded_remove_advanced_cache_file();

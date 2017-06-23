@@ -9,7 +9,12 @@ add_action('unarchive_blog', 'siteloaded_cache_destroy', 10, 1);
 add_action('make_spam_blog', 'siteloaded_cache_destroy', 10, 1);
 add_action('make_ham_blog', 'siteloaded_cache_destroy', 10, 1);
 
-function siteloaded_network_each_blog(callable $callback) {
+function siteloaded_network_each_blog(callable $callback, $context) {
+    if (!is_multisite()) {
+        $callback(get_current_blog_id(), $context === 'deactivating', TRUE);
+        return;
+    }
+
     function plugin_is_active($blog_id) {
         $plugins = get_blog_option($blog_id, 'active_plugins');
         foreach($plugins as $p) {
@@ -18,12 +23,6 @@ function siteloaded_network_each_blog(callable $callback) {
             }
         }
         return FALSE;
-    }
-
-    if (!is_multisite()) {
-        $blog_id = get_current_blog_id();
-        $callback($blog_id, plugin_is_active($blog_id), TRUE);
-        return;
     }
 
     $blog_id = is_network_admin() ? -1 : get_current_blog_id();
