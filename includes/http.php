@@ -9,6 +9,9 @@ function siteloaded_close_http_client_connection($content_type, $response) {
     header('Connection: close');
     echo $response;
     flush();
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
     session_write_close();
 }
 

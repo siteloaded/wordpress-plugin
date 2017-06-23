@@ -47,7 +47,7 @@ function siteloaded_admin_bar_enqueue_scripts($hook) {
     wp_localize_script('siteloaded_admin_bar_script', 'siteloaded_admin_bar_script', array(
         'purgeAllAction' => 'siteloaded_admin_bar_purge_all',
         'ajaxUrl' => admin_url('admin-ajax.php'),
-        'succeededMessage' => __('Emptying cache...', 'siteloaded'),
+        'emptyingMessage' => __('Emptying cache...', 'siteloaded'),
         'failedMessage' => __('An error occured, please try again later', 'siteloaded'),
     ));
 }
