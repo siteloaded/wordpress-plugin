@@ -1,6 +1,9 @@
 <?php
 defined('ABSPATH') or exit;
 
+add_action('comment_post', 'siteloaded_comment_posted', PHP_INT_MAX, 2);
+add_action('transition_comment_status', 'siteloaded_comment_status_changed', PHP_INT_MAX, 3);
+
 function siteloaded_cache_safe_purge($blog_id) {
     $base = siteloaded_cache_dir($blog_id);
 
@@ -81,6 +84,30 @@ function siteloaded_cache_destroy($blog_id) {
     }
 
     @rmdir($base);
+}
+
+function siteloaded_cache_purge_post($blog_id, $post_id) {
+    $url = get_permalink($post_id);
+    if ($url === FALSE) {
+        return;
+    }
+
+    siteloaded_debug('purging page due to comment: ' . $url);
+
+    $filename = siteloaded_cache_dir($blog_id) . sha1($url) . '.html';
+    $f = new siteloaded_file_access();
+    $fp = $f->open_excl($filename, 'rb');
+
+    if ($fp === FALSE) {
+        // might not be in cache, ignore error
+        return;
+    }
+
+    if (!@unlink($filename)) {
+        siteloaded_log('could not delete file for purge: ' . $filename);
+    }
+
+    $f->close();
 }
 
 function siteloaded_cache_warmup($blog_id) {
@@ -215,4 +242,23 @@ function siteloaded_cache_ensure_valid($blog_id) {
     }
 
     siteloaded_ensure_htaccess_file();
+}
+
+function siteloaded_comment_posted($id, $approved) {
+    if ($approved !== 1) {
+        return;
+    }
+    $comment = get_comment($id);
+    if ($comment === null) {
+        return;
+    }
+    siteloaded_cache_purge_post(get_current_blog_id(), $comment->comment_post_ID);
+}
+
+function siteloaded_comment_status_changed($new_status, $old_status, $comment) {
+    if ($old_status === $new_status || ($new_status !== 'approved' && $old_status !== 'approved')) {
+        return;
+    }
+
+    siteloaded_cache_purge_post(get_current_blog_id(), $comment->comment_post_ID);
 }

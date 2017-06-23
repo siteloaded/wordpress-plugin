@@ -3,7 +3,7 @@
 Plugin Name: Site Loaded
 Plugin URI: https://www.siteloaded.com/
 Description: Site Loaded Official Plugin
-Version: 0.0.3
+Version: 0.1.0
 Author: Site Loaded
 Author URI: https://www.siteloaded.com/
 Licence: GPLv2
