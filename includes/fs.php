@@ -11,7 +11,7 @@ class siteloaded_lock_file
             return FALSE;
         }
 
-        $this->path = SITELOADED_TEMP_DIR . $id . '.lock';
+        $this->path = siteloaded_temp_dir() . $id . '.lock';
         $this->fp = @fopen($this->path, 'wb');
         if ($this->fp === FALSE) {
             $this->path = "";
@@ -112,19 +112,26 @@ function siteloaded_shared_read($path) {
 }
 
 function siteloaded_temp_dir() {
+    static $dir = NULL;
+
+    if ($dir !== NULL) {
+        return $dir;
+    }
+
     if (function_exists('sys_get_temp_dir')) {
-        $temp = sys_get_temp_dir();
-        if (@is_dir($temp) && @is_writable($temp)) {
-            return trailingslashit($temp);
+        $dir = trailingslashit(sys_get_temp_dir());
+        if (@is_dir($dir) && @is_writable($dir)) {
+            return $dir;
         }
     }
 
-    $temp = ini_get('upload_tmp_dir');
-    if (@is_dir($temp) && @is_writable($temp)) {
-        return trailingslashit($temp);
+    $dir = trailingslashit(ini_get('upload_tmp_dir'));
+    if (@is_dir($dir) && @is_writable($dir)) {
+        return $dir;
     }
 
-    return SITELOADED_CACHE_DIR;
+    $dir = SITELOADED_CACHE_DIR;
+    return $dir;
 }
 
 function siteloaded_get_svg_logo($fill = '#fff') {
@@ -231,41 +238,4 @@ function siteloaded_ensure_config($key, $val) {
 
     siteloaded_log('defined ' . $key . ' -> ' . $val . ' to ' . SITELOADED_WP_DIR . 'wp-config.php');
     return TRUE;
-}
-
-function siteloaded_ensure_htaccess_file($force = FALSE) {
-    $path =  SITELOADED_CACHE_DIR . '.htaccess';
-
-    if (!is_file($path) || $force) {
-        $htaccess = <<<EOT
-<IfModule headers_module>
-Header unset Pragma
-FileETag None
-Header unset ETag
-</IfModule>
-
-<IfModule mod_expires.c>
-ExpiresActive On
-<FilesMatch "\.(js|css)$">
-ExpiresDefault "access plus 1 year"
-</FilesMatch>
-</IfModule>
-
-<IfModule mod_deflate.c>
-<FilesMatch "\.(js|css)$">
-SetOutputFilter DEFLATE
-</FilesMatch>
-</IfModule>
-EOT;
-
-        if (!is_dir(SITELOADED_CACHE_DIR)) {
-            $recursive = TRUE;
-            mkdir(SITELOADED_CACHE_DIR, 0755, $recursive);
-        }
-
-        siteloaded_debug('writing .htaccess file');
-        if (file_put_contents($path, $htaccess, LOCK_EX) === FALSE) {
-            siteloaded_log('could not write asset ' . $path);
-        }
-    }
 }

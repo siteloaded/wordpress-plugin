@@ -9,8 +9,8 @@ if (siteloaded_advc_cache_hit() === TRUE) {
 }
 
 ob_start(function($html) {
-    return function_exists('siteloaded_optimize_page')
-        ? siteloaded_optimize_page($html)
+    return function_exists('siteloaded_optimize_and_cache')
+        ? siteloaded_optimize_and_cache($html)
         : $html;
 });
 
@@ -109,7 +109,7 @@ function siteloaded_advc_cache_hit() {
     $f = new siteloaded_advc_file_access();
     $fp = $f->open_shared($cached_file, 'rb');
     if ($fp === FALSE) {
-        $cached_file = SITELOADED_ADVC_LOCAL_CACHE_DIR . $blog_id . '/' . $sha1_str . '.404.html';
+        $cached_file = SITELOADED_ADVC_LOCAL_CACHE_DIR . $blog_id . '/' . $sha1_str . '-404.html';
         $fp = $f->open_shared($cached_file, 'rb');
         if ($fp === FALSE) {
             return FALSE;

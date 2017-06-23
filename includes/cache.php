@@ -13,7 +13,7 @@ function siteloaded_cache_safe_purge($blog_id) {
         $fp = $f->open_excl($filename, 'rb');
 
         if ($fp === FALSE) {
-            sl_log('could not open file for purge: ' . $filename);
+            siteloaded_log('could not open file for purge: ' . $filename);
             continue;
         }
 
@@ -24,7 +24,7 @@ function siteloaded_cache_safe_purge($blog_id) {
         }
 
         if (!@unlink($filename)) {
-            sl_log('could not delete file for purge: ' . $filename);
+            siteloaded_log('could not delete file for purge: ' . $filename);
         }
 
         $f->close();
@@ -36,7 +36,7 @@ function siteloaded_cache_safe_purge($blog_id) {
             $fp = $f->open_excl($filename, 'rb');
 
             if ($fp === FALSE) {
-                sl_log('could not open file for purge: ' . $filename);
+                siteloaded_log('could not open file for purge: ' . $filename);
                 continue;
             }
 
@@ -46,7 +46,7 @@ function siteloaded_cache_safe_purge($blog_id) {
                 // don't delete static resources that have been created
                 // after we started the purge...
                 if (!@unlink($filename)) {
-                    sl_log('could not delete file for purge: ' . $filename);
+                    siteloaded_log('could not delete file for purge: ' . $filename);
                 }
             }
 
@@ -69,12 +69,12 @@ function siteloaded_cache_destroy($blog_id) {
         $fp = $f->open_excl($filename, 'rb');
 
         if ($fp === FALSE) {
-            sl_log('could not open file for purge: ' . $filename);
+            siteloaded_log('could not open file for purge: ' . $filename);
             continue;
         }
 
         if (!@unlink($filename)) {
-            sl_log('could not delete file for purge: ' . $filename);
+            siteloaded_log('could not delete file for purge: ' . $filename);
         }
 
         $f->close();
@@ -167,4 +167,52 @@ function siteloaded_cache_warmup($blog_id) {
 
 function siteloaded_cache_dir($blog_id) {
     return SITELOADED_CACHE_DIR . $blog_id . '/';
+}
+
+function siteloaded_ensure_htaccess_file($force = FALSE) {
+    $path =  SITELOADED_CACHE_DIR . '.htaccess';
+
+    if (!is_file($path) || $force) {
+        $htaccess = <<<EOT
+<IfModule headers_module>
+Header unset Pragma
+FileETag None
+Header unset ETag
+</IfModule>
+
+<IfModule mod_expires.c>
+ExpiresActive On
+<FilesMatch "\.(js|css)$">
+ExpiresDefault "access plus 1 year"
+</FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+<FilesMatch "\.(js|css)$">
+SetOutputFilter DEFLATE
+</FilesMatch>
+</IfModule>
+EOT;
+
+        if (!is_dir(SITELOADED_CACHE_DIR)) {
+            $recursive = TRUE;
+            mkdir(SITELOADED_CACHE_DIR, 0755, $recursive);
+        }
+
+        siteloaded_debug('writing .htaccess file');
+        if (file_put_contents($path, $htaccess, LOCK_EX) === FALSE) {
+            siteloaded_log('could not write asset ' . $path);
+        }
+    }
+}
+
+function siteloaded_cache_ensure_valid($blog_id) {
+    $base = siteloaded_cache_dir($blog_id);
+
+    if (!is_dir($base)) {
+        $recursive = TRUE;
+        @mkdir($base, 0755, $recursive);
+    }
+
+    siteloaded_ensure_htaccess_file();
 }
