@@ -6,21 +6,25 @@
 
         $.featherlight(siteloaded_admin_bar_script.emptyingMessage, { type: 'text' });
         var start = new Date().valueOf();
-        var close = function () {
+        var close = function() {
             var opened = $.featherlight.current();
             opened && opened.close();
         };
+        var safeClose = setTimeout(close, 6000);
 
-        $.post(siteloaded_admin_bar_script.ajaxUrl, { 'action': siteloaded_admin_bar_script.purgeAllAction })
-            .always(function(res) {
-                if (res.code !== 200) {
-                    close();
-                    $.featherlight(siteloaded_admin_bar_script.failedMessage, { type: 'text' });
-                    return;
-                }
+        $.post(siteloaded_admin_bar_script.ajaxUrl, {
+            action: siteloaded_admin_bar_script.purgeAllAction
+        }).always(function(res) {
+            clearTimeout(safeClose);
 
-                setTimeout(close, Math.max(1500 - (new Date().valueOf() - start), 0));
-            });
+            if (!res || res.code !== 200) {
+                close();
+                $.featherlight(siteloaded_admin_bar_script.failedMessage, { type: 'text' });
+                return;
+            }
+
+            setTimeout(close, Math.max(1500 - (new Date().valueOf() - start), 0));
+        });
     }
 
     document.addEventListener("DOMContentLoaded", function() {

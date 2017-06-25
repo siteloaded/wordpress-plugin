@@ -33,9 +33,15 @@ class siteloaded_lock_file
             return FALSE;
         }
 
-        @unlink($this->path);
-        @flock($this->fp, LOCK_UN);
-        @fclose($this->fp);
+        if (SITELOADED_PLATFORM_WINDOWS) {
+            @flock($this->fp, LOCK_UN);
+            @fclose($this->fp);
+            @unlink($this->path);
+        } else {
+            @unlink($this->path);
+            @flock($this->fp, LOCK_UN);
+            @fclose($this->fp);
+        }
 
         $this->path = "";
         $this->fp = FALSE;
@@ -153,7 +159,7 @@ function siteloaded_ensure_advanced_cache_file() {
     $hook = SITELOADED_CACHE_HOOK;
     $wp_content_dir = trailingslashit(WP_CONTENT_DIR);
     $multisite = var_export(is_multisite(), TRUE);
-    $sites = var_export(siteloaded_network_get_blogs(TRUE), TRUE);
+    $sites = siteloaded_export54(siteloaded_network_get_blogs(TRUE));
 
     $content = <<<EOT
 <?php
@@ -166,10 +172,10 @@ if (defined('WP_INSTALLING') && WP_INSTALLING) {
     return;
 }
 
-define('SITELOADED_ADVC_HOOK_INSTALLED', TRUE);
+define('SITELOADED_ADVC_HOOK_INSTALLED', true);
 define('SITELOADED_ADVC_LOCAL_CACHE_DIR', '{$wp_content_dir}cache/siteloaded/');
 define('SITELOADED_ADVC_NETWORK_ENABLED', $multisite);
-define('SITELOADED_ADVC_NETWORK_SITES',   $sites);
+const SITELOADED_ADVC_NETWORK_SITES = $sites;
 
 require('{$hook}');
 
@@ -186,6 +192,28 @@ EOT;
     }
 
     return TRUE;
+}
+
+function siteloaded_export54($var, $indent="") {
+    // credits goes to:
+    // https://stackoverflow.com/a/24316675/193982
+    switch (gettype($var)) {
+        case "string":
+            return '"' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '"';
+        case "array":
+            $indexed = array_keys($var) === range(0, count($var) - 1);
+            $r = [];
+            foreach ($var as $key => $value) {
+                $r[] = "$indent    "
+                     . ($indexed ? "" : siteloaded_export54($key) . " => ")
+                     . siteloaded_export54($value, "$indent    ");
+            }
+            return "[\n" . implode(",\n", $r) . "\n" . $indent . "]";
+        case "boolean":
+            return $var ? "TRUE" : "FALSE";
+        default:
+            return var_export($var, TRUE);
+    }
 }
 
 function siteloaded_remove_advanced_cache_file() {

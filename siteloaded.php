@@ -29,6 +29,7 @@ define('SITELOADED_CACHE_HOOK',                 SITELOADED_DIR . 'includes/advan
 define('SITELOADED_ADV_CACHE_FILE',             SITELOADED_CONTENT_DIR . 'advanced-cache.php');
 define('SITELOADED_WP_DIR',                     trailingslashit(ABSPATH));
 define('SITELOADED_OPTIMIZE_URL',               SITELOADED_ENV === 'DEV' ? 'http://optimizer.siteloaded.dev/optimize' : 'https://optimizer.siteloaded.com/optimize');
+define('SITELOADED_PLATFORM_WINDOWS',           defined('PHP_WINDOWS_VERSION_MAJOR'));
 
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Elements.php');
 require_once(SITELOADED_DIR . 'vendor/masterminds/html5/src/HTML5/Entities.php');

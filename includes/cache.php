@@ -26,6 +26,14 @@ function siteloaded_cache_safe_purge($blog_id) {
             $more_recent = $mtime;
         }
 
+        if (SITELOADED_PLATFORM_WINDOWS) {
+            $f->close();
+            if (!@unlink($filename)) {
+                siteloaded_log('could not delete file for purge: ' . $filename);
+            }
+            continue;
+        }
+
         if (!@unlink($filename)) {
             siteloaded_log('could not delete file for purge: ' . $filename);
         }
@@ -48,6 +56,15 @@ function siteloaded_cache_safe_purge($blog_id) {
             if ($mtime < $more_recent) {
                 // don't delete static resources that have been created
                 // after we started the purge...
+
+                if (SITELOADED_PLATFORM_WINDOWS) {
+                    $f->close();
+                    if (!@unlink($filename)) {
+                        siteloaded_log('could not delete file for purge: ' . $filename);
+                    }
+                    continue;
+                }
+
                 if (!@unlink($filename)) {
                     siteloaded_log('could not delete file for purge: ' . $filename);
                 }
@@ -76,6 +93,14 @@ function siteloaded_cache_destroy($blog_id) {
             continue;
         }
 
+        if (SITELOADED_PLATFORM_WINDOWS) {
+            $f->close();
+            if (!@unlink($filename)) {
+                siteloaded_log('could not delete file for purge: ' . $filename);
+            }
+            continue;
+        }
+
         if (!@unlink($filename)) {
             siteloaded_log('could not delete file for purge: ' . $filename);
         }
@@ -100,6 +125,14 @@ function siteloaded_cache_purge_post($blog_id, $post_id) {
 
     if ($fp === FALSE) {
         // might not be in cache, ignore error
+        return;
+    }
+
+    if (SITELOADED_PLATFORM_WINDOWS) {
+        $f->close();
+        if (!@unlink($filename)) {
+            siteloaded_log('could not delete file for purge: ' . $filename);
+        }
         return;
     }
 

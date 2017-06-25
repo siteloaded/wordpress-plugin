@@ -61,7 +61,7 @@ function siteloaded_admin_bar_purge_all() {
         wp_die();
     }
 
-    siteloaded_close_http_client_connection('application/json', '{"code":200}');
+    siteloaded_close_http_client_connection('application/json; charset=UTF-8', '{"code":200}');
     siteloaded_cache_safe_purge($blog_id);
     siteloaded_cache_warmup($blog_id);
 }

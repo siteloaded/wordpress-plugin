@@ -107,7 +107,7 @@ function siteloaded_remote_optimize_and_save($key, $blog_id, $page_url, $cache_u
 function siteloaded_get_optimization_package($key, $page_url, $cache_url, $page_html) {
     siteloaded_debug('getting optimization package for ' . $page_url);
     $gzip = function_exists('gzencode');
-    $mime_boundary = md5(time());
+    $mime_boundary = md5((string)time());
     $payload = siteloaded_get_optimization_multipart_payload($page_url, $cache_url, $page_html, $mime_boundary);
     $headers = array(
         'Content-Type' => 'multipart/form-data; boundary=' . $mime_boundary,
