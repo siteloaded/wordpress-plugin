@@ -1,18 +1,18 @@
 <?php
 defined('ABSPATH') or exit;
 
-add_action('admin_bar_menu', 'siteloaded_admin_bar_menu', 100, 1);
-add_action('admin_enqueue_scripts', 'siteloaded_admin_bar_enqueue_scripts');
-add_action('wp_enqueue_scripts', 'siteloaded_admin_bar_enqueue_scripts');
-add_action('wp_ajax_siteloaded_admin_bar_purge_all', 'siteloaded_admin_bar_purge_all');
-add_action('admin_init', 'siteloaded_ensure_valid_config');
+add_action('admin_bar_menu', '__siteloaded_admin_bar_menu', 100, 1);
+add_action('admin_enqueue_scripts', '__siteloaded_admin_bar_enqueue_scripts');
+add_action('wp_enqueue_scripts', '__siteloaded_admin_bar_enqueue_scripts');
+add_action('wp_ajax___siteloaded_admin_bar_purge_all', '__siteloaded_admin_bar_purge_all');
+add_action('admin_init', '__siteloaded_ensure_valid_config');
 // TODO: disabled during beta
-// add_action('admin_menu', 'siteloaded_admin_menu', PHP_INT_MAX);
-// add_action('admin_notices', 'siteloaded_admin_notices_no_subscription');
-// add_action('admin_enqueue_scripts', 'siteloaded_admin_panel_enqueue_scripts');
-// add_action('wp_ajax_siteloaded_admin_set_subscription', 'siteloaded_admin_set_subscription');
+// add_action('admin_menu', '__siteloaded_admin_menu', PHP_INT_MAX);
+// add_action('admin_notices', '__siteloaded_admin_notices_no_subscription');
+// add_action('admin_enqueue_scripts', '__siteloaded_admin_panel_enqueue_scripts');
+// add_action('wp_ajax___siteloaded_admin_set_subscription', '__siteloaded_admin_set_subscription');
 
-function siteloaded_admin_bar_menu($wp_admin_bar) {
+function __siteloaded_admin_bar_menu($wp_admin_bar) {
     if (is_network_admin() || !current_user_can('manage_options')) {
         return;
     }
@@ -33,7 +33,7 @@ function siteloaded_admin_bar_menu($wp_admin_bar) {
     ));
 }
 
-function siteloaded_admin_bar_enqueue_scripts($hook) {
+function __siteloaded_admin_bar_enqueue_scripts($hook) {
     if (!is_admin_bar_showing() || is_network_admin() || !current_user_can('manage_options')) {
         return;
     }
@@ -45,14 +45,14 @@ function siteloaded_admin_bar_enqueue_scripts($hook) {
     wp_enqueue_style('siteloaded_admin_bar_style', SITELOADED_URL . 'admin/css/admin-bar.css', array('siteloaded_vendor_featherlight_style'));
 
     wp_localize_script('siteloaded_admin_bar_script', 'siteloaded_admin_bar_script', array(
-        'purgeAllAction' => 'siteloaded_admin_bar_purge_all',
+        'purgeAllAction' => '__siteloaded_admin_bar_purge_all',
         'ajaxUrl' => admin_url('admin-ajax.php'),
         'emptyingMessage' => __('Emptying cache...', 'siteloaded'),
         'failedMessage' => __('An error occured, please try again later', 'siteloaded'),
     ));
 }
 
-function siteloaded_admin_bar_purge_all() {
+function __siteloaded_admin_bar_purge_all() {
     $blog_id = get_current_blog_id();
 
     if (!current_user_can('manage_options')) {
@@ -66,7 +66,7 @@ function siteloaded_admin_bar_purge_all() {
     siteloaded_cache_warmup($blog_id);
 }
 
-function siteloaded_admin_menu() {
+function __siteloaded_admin_menu() {
     if (is_network_admin() || !current_user_can('manage_options')) {
         return;
     }
@@ -96,7 +96,7 @@ function siteloaded_cp_content() {
     <?php
 }
 
-function siteloaded_admin_panel_enqueue_scripts($hook) {
+function __siteloaded_admin_panel_enqueue_scripts($hook) {
     if (is_network_admin() || !current_user_can('manage_options')) {
         return;
     }
@@ -110,13 +110,13 @@ function siteloaded_admin_panel_enqueue_scripts($hook) {
 
     wp_localize_script('siteloaded_admin_panel_script', 'siteloaded_admin_panel_script', array(
         'validReferrer' => rtrim(SITELOADED_CONTROLPANEL_URL, "/"),
-        'setSubscriptionAction' => 'siteloaded_admin_set_subscription'
+        'setSubscriptionAction' => '__siteloaded_admin_set_subscription'
     ));
 }
 
-function siteloaded_admin_set_subscription() {
+function __siteloaded_admin_set_subscription() {
     // TODO, respond with content-type json
-    // and a proper response like in function `siteloaded_admin_bar_purge_all`
+    // and a proper response like in function `__siteloaded_admin_bar_purge_all`
 
     // TODO, test multisite, what happens
 
@@ -141,7 +141,7 @@ function siteloaded_admin_set_subscription() {
     wp_die();
 }
 
-function siteloaded_admin_notices_no_subscription() {
+function __siteloaded_admin_notices_no_subscription() {
     global $pagenow;
 
     if (is_network_admin() || !current_user_can('manage_options')) {
@@ -162,7 +162,7 @@ function siteloaded_admin_notices_no_subscription() {
 	printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class),  $message);
 }
 
-function siteloaded_ensure_valid_config() {
+function __siteloaded_ensure_valid_config() {
     if (defined('DOING_AJAX') || defined('DOING_AUTOSAVE')) {
         return;
     }

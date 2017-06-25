@@ -9,9 +9,9 @@ function siteloaded_debug($msg) {
     do_action('siteloaded_log', $msg, TRUE);
 }
 
-add_action('siteloaded_log', 'siteloaded_debug_log', PHP_INT_MAX, 2);
+add_action('siteloaded_log', '__siteloaded_debug_log', PHP_INT_MAX, 2);
 
-function siteloaded_debug_log($msg, $debug = FALSE) {
+function __siteloaded_debug_log($msg, $debug = FALSE) {
     if (!defined('WP_DEBUG') || !WP_DEBUG || !defined('WP_DEBUG_LOG') || !WP_DEBUG_LOG) {
         return;
     }

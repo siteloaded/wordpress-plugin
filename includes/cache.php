@@ -1,8 +1,8 @@
 <?php
 defined('ABSPATH') or exit;
 
-add_action('comment_post', 'siteloaded_comment_posted', PHP_INT_MAX, 2);
-add_action('transition_comment_status', 'siteloaded_comment_status_changed', PHP_INT_MAX, 3);
+add_action('comment_post', '__siteloaded_comment_posted', PHP_INT_MAX, 2);
+add_action('transition_comment_status', '__siteloaded_comment_status_changed', PHP_INT_MAX, 3);
 
 function siteloaded_cache_safe_purge($blog_id) {
     $base = siteloaded_cache_dir($blog_id);
@@ -277,7 +277,7 @@ function siteloaded_cache_ensure_valid($blog_id) {
     siteloaded_ensure_htaccess_file();
 }
 
-function siteloaded_comment_posted($id, $approved) {
+function __siteloaded_comment_posted($id, $approved) {
     if ($approved !== 1) {
         return;
     }
@@ -288,7 +288,7 @@ function siteloaded_comment_posted($id, $approved) {
     siteloaded_cache_purge_post(get_current_blog_id(), $comment->comment_post_ID);
 }
 
-function siteloaded_comment_status_changed($new_status, $old_status, $comment) {
+function __siteloaded_comment_status_changed($new_status, $old_status, $comment) {
     if ($old_status === $new_status || ($new_status !== 'approved' && $old_status !== 'approved')) {
         return;
     }
