@@ -3,9 +3,12 @@ defined('ABSPATH') or exit;
 
 add_action('admin_bar_menu', '__siteloaded_admin_bar_menu', 100, 1);
 add_action('admin_enqueue_scripts', '__siteloaded_admin_bar_enqueue_scripts');
+add_action('admin_enqueue_scripts', '__siteloaded_editpost_enqueue_scripts');
 add_action('wp_enqueue_scripts', '__siteloaded_admin_bar_enqueue_scripts');
 add_action('wp_ajax___siteloaded_admin_bar_purge_all', '__siteloaded_admin_bar_purge_all');
+add_action('wp_ajax___siteloaded_editpost_purge', '__siteloaded_editpost_purge');
 add_action('admin_init', '__siteloaded_ensure_valid_config');
+add_action('post_submitbox_start', '__siteloaded_post_submitbox_start');
 // TODO: disabled during beta
 // add_action('admin_menu', '__siteloaded_admin_menu', PHP_INT_MAX);
 // add_action('admin_notices', '__siteloaded_admin_notices_no_subscription');
@@ -45,10 +48,10 @@ function __siteloaded_admin_bar_enqueue_scripts($hook) {
     wp_enqueue_style('siteloaded_admin_bar_style', SITELOADED_URL . 'admin/css/admin-bar.css', array('siteloaded_vendor_featherlight_style'));
 
     wp_localize_script('siteloaded_admin_bar_script', 'siteloaded_admin_bar_script', array(
-        'purgeAllAction' => '__siteloaded_admin_bar_purge_all',
-        'ajaxUrl' => admin_url('admin-ajax.php'),
-        'emptyingMessage' => __('Emptying cache...', 'siteloaded'),
-        'failedMessage' => __('An error occured, please try again later', 'siteloaded'),
+        'purge_all_action' => '__siteloaded_admin_bar_purge_all',
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'emptying_message' => __('Emptying cache...', 'siteloaded'),
+        'failed_message' => __('An error occured, please try again later', 'siteloaded')
     ));
 }
 
@@ -56,7 +59,7 @@ function __siteloaded_admin_bar_purge_all() {
     $blog_id = get_current_blog_id();
 
     if (!current_user_can('manage_options')) {
-        header( "Content-Type: application/json" );
+        header('Content-Type: application/json');
         echo '{"code":401}';
         wp_die();
     }
@@ -191,4 +194,51 @@ function __siteloaded_ensure_valid_config() {
         siteloaded_ensure_advanced_cache_file();
         siteloaded_ensure_htaccess_file(TRUE);
     }
+}
+
+function __siteloaded_editpost_enqueue_scripts($hook) {
+    if ($hook !== 'post.php'
+        || is_network_admin()
+        || !current_user_can('manage_options')) {
+        return;
+    }
+
+    wp_enqueue_script('siteloaded_vendor_featherlight_script', SITELOADED_URL . 'admin/js/featherlight.min.js', array('jquery'));
+    wp_enqueue_style('siteloaded_vendor_featherlight_style', SITELOADED_URL . 'admin/css/featherlight.min.css');
+
+    wp_enqueue_script('siteloaded_editpost_script', SITELOADED_URL . 'admin/js/edit-post.js', array('jquery', 'siteloaded_vendor_featherlight_script'));
+
+    wp_localize_script('siteloaded_editpost_script', 'siteloaded_editpost_script', array(
+        'purge_post_cache_action' => '__siteloaded_editpost_purge',
+        'emptying_message' => __('Emptying post cache...', 'siteloaded'),
+        'failed_message' => __('An error occured, please try again later', 'siteloaded'),
+    ));
+}
+
+function __siteloaded_post_submitbox_start() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    global $post;
+    printf('<div class="siteloaded-editpost-submitbox"><a class="purge" data-post-id="%s" href="#">%s</a></div>', $post->ID, __('Clear Cache', 'siteloaded'));
+}
+
+function __siteloaded_editpost_purge() {
+    $blog_id = get_current_blog_id();
+
+    if (!current_user_can('manage_options')) {
+        header('Content-Type: application/json');
+        echo '{"code":401}';
+        wp_die();
+    }
+
+    if (!isset($_POST['post_id'])) {
+        header('Content-Type: application/json');
+        echo '{"code":422}';
+        wp_die();
+    }
+
+    siteloaded_close_http_client_connection('application/json; charset=UTF-8', '{"code":200}');
+    siteloaded_cache_purge_post($blog_id, $_POST['post_id']);
 }

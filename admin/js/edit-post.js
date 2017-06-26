@@ -1,10 +1,15 @@
 (function($) {
     'use strict';
 
-    function onPurgeAllClick(event) {
+    function onPurgeClick(event) {
         event.preventDefault();
 
-        $.featherlight(siteloaded_admin_bar_script.emptying_message, { type: 'text' });
+        var postId = Number($(event.target).data('post-id'));
+        if (postId < 1) {
+            return;
+        }
+
+        $.featherlight(siteloaded_editpost_script.emptying_message, { type: 'text' });
         var start = new Date().valueOf();
         var close = function() {
             var opened = $.featherlight.current();
@@ -12,15 +17,15 @@
         };
         var safeClose = setTimeout(close, 6000);
 
-        $.post(siteloaded_admin_bar_script.ajax_url, {
-            action: siteloaded_admin_bar_script.purge_all_action,
-            nonce: siteloaded_admin_bar_script.ajax_nonce
+        $.post(ajaxurl, {
+            action: siteloaded_editpost_script.purge_post_cache_action,
+            post_id: postId
         }).always(function(res) {
             clearTimeout(safeClose);
 
             if (!res || res.code !== 200) {
                 close();
-                $.featherlight(siteloaded_admin_bar_script.failed_message, { type: 'text' });
+                $.featherlight(siteloaded_editpost_script.failed_message, { type: 'text' });
                 return;
             }
 
@@ -29,10 +34,11 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var n = document.querySelector('.siteloaded-admin-bar-purge-all a');
+        var n = document.querySelector('.siteloaded-editpost-submitbox a.purge');
         if (!n) {
             return;
         }
-        n.addEventListener('click', onPurgeAllClick, false);
+        n.addEventListener('click', onPurgeClick, false);
     }, false);
+
 })(jQuery);

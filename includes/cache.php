@@ -117,7 +117,7 @@ function siteloaded_cache_purge_post($blog_id, $post_id) {
         return;
     }
 
-    siteloaded_debug('purging page due to comment: ' . $url);
+    siteloaded_debug('purging post from cache: ' . $url);
 
     $filename = siteloaded_cache_dir($blog_id) . sha1($url) . '.html';
     $f = new siteloaded_file_access();

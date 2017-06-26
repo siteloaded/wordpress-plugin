@@ -35,7 +35,7 @@
     }
 
     function setSubscription(id, subscription) {
-        $.post(ajaxurl, { 'action': siteloaded_admin_panel_script.setSubscriptionAction, subscription_id: subscription })
+        $.post(ajaxurl, { action: siteloaded_admin_panel_script.setSubscriptionAction, subscription_id: subscription })
             .always(function(response) {
                 var status = typeof response === 'object' ? response.status : Number(response);
                 callback(id, status);
