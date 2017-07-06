@@ -24,6 +24,8 @@ function siteloaded_advc_current_request_cacheable() {
     }
 
     // TODO, check and refine things here...
+    // TODO, do not cache if ?preview=true
+    // TODO, getting stuck out of cache after a comment (the cookie stays after the comment)
     if (!empty($_COOKIE)) {
         foreach ($_COOKIE as $k => $v) {
             if (preg_match('/^(wp-postpass|wordpress_logged_in|comment_author)_/', $k)) {

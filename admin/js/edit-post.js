@@ -25,11 +25,10 @@
                 post_id: postId
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            if (textStatus === 'timeout') {
-                close();
-                return;
+            close();
+            if (textStatus !== 'timeout') {
+                $.featherlight(siteloaded_editpost_script.failed_message, { type: 'text' });
             }
-            $.featherlight(siteloaded_editpost_script.failed_message, { type: 'text' });
         }).done(function(res) {
             setTimeout(close, Math.max(1500 - (new Date().valueOf() - start), 0));
         });

@@ -3,7 +3,7 @@
 Plugin Name: Site Loaded
 Plugin URI: https://www.siteloaded.com/
 Description: Site Loaded Official Plugin
-Version: 0.1.0
+Version: 0.2.0
 Author: Site Loaded
 Author URI: https://www.siteloaded.com/
 Licence: GPLv2
@@ -60,6 +60,7 @@ require_once(SITELOADED_DIR . 'includes/http.php');
 require_once(SITELOADED_DIR . 'includes/update.php');
 require_once(SITELOADED_DIR . 'includes/fs.php');
 require_once(SITELOADED_DIR . 'includes/cache.php');
+require_once(SITELOADED_DIR . 'includes/cache-invalidation.php');
 require_once(SITELOADED_DIR . 'includes/admin.php');
 require_once(SITELOADED_DIR . 'includes/activation.php');
 require_once(SITELOADED_DIR . 'includes/multisite.php');

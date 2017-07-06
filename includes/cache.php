@@ -1,9 +1,6 @@
 <?php
 defined('ABSPATH') or exit;
 
-add_action('comment_post', '__siteloaded_comment_posted', PHP_INT_MAX, 2);
-add_action('transition_comment_status', '__siteloaded_comment_status_changed', PHP_INT_MAX, 3);
-
 function siteloaded_cache_safe_purge($blog_id) {
     $base = siteloaded_cache_dir($blog_id);
 
@@ -11,12 +8,12 @@ function siteloaded_cache_safe_purge($blog_id) {
 
     $more_recent = PHP_INT_MAX;
 
-    foreach (glob("$base*.html", GLOB_NOSORT) as $filename) {
+    foreach (glob("$base*.html", GLOB_NOSORT) as $path) {
         $f = new siteloaded_file_access();
-        $fp = $f->open_excl($filename, 'rb');
+        $fp = $f->open_excl($path, 'rb');
 
         if ($fp === FALSE) {
-            siteloaded_log('could not open file for purge: ' . $filename);
+            siteloaded_log('could not open file for purge: ' . $path);
             continue;
         }
 
@@ -26,28 +23,30 @@ function siteloaded_cache_safe_purge($blog_id) {
             $more_recent = $mtime;
         }
 
+        siteloaded_debug('purging: ' . $path);
+
         if (SITELOADED_PLATFORM_WINDOWS) {
             $f->close();
-            if (!@unlink($filename)) {
-                siteloaded_log('could not delete file for purge: ' . $filename);
+            if (!@unlink($path)) {
+                siteloaded_log('could not delete file for purge: ' . $path);
             }
             continue;
         }
 
-        if (!@unlink($filename)) {
-            siteloaded_log('could not delete file for purge: ' . $filename);
+        if (!@unlink($path)) {
+            siteloaded_log('could not delete file for purge: ' . $path);
         }
 
         $f->close();
     }
 
     if ($more_recent !== PHP_INT_MAX) {
-        foreach (glob("$base*.{css,js}", GLOB_NOSORT | GLOB_BRACE) as $filename) {
+        foreach (glob("$base*.{css,js}", GLOB_NOSORT | GLOB_BRACE) as $path) {
             $f = new siteloaded_file_access();
-            $fp = $f->open_excl($filename, 'rb');
+            $fp = $f->open_excl($path, 'rb');
 
             if ($fp === FALSE) {
-                siteloaded_log('could not open file for purge: ' . $filename);
+                siteloaded_log('could not open file for purge: ' . $path);
                 continue;
             }
 
@@ -57,16 +56,18 @@ function siteloaded_cache_safe_purge($blog_id) {
                 // don't delete static resources that have been created
                 // after we started the purge...
 
+                siteloaded_debug('purging: ' . $path);
+
                 if (SITELOADED_PLATFORM_WINDOWS) {
                     $f->close();
-                    if (!@unlink($filename)) {
-                        siteloaded_log('could not delete file for purge: ' . $filename);
+                    if (!@unlink($path)) {
+                        siteloaded_log('could not delete file for purge: ' . $path);
                     }
                     continue;
                 }
 
-                if (!@unlink($filename)) {
-                    siteloaded_log('could not delete file for purge: ' . $filename);
+                if (!@unlink($path)) {
+                    siteloaded_log('could not delete file for purge: ' . $path);
                 }
             }
 
@@ -84,25 +85,27 @@ function siteloaded_cache_destroy($blog_id) {
         return;
     }
 
-    foreach (glob("$base*.{css,js,html}", GLOB_NOSORT | GLOB_BRACE) as $filename) {
+    foreach (glob("$base*.{css,js,html}", GLOB_NOSORT | GLOB_BRACE) as $path) {
         $f = new siteloaded_file_access();
-        $fp = $f->open_excl($filename, 'rb');
+        $fp = $f->open_excl($path, 'rb');
 
         if ($fp === FALSE) {
-            siteloaded_log('could not open file for purge: ' . $filename);
+            siteloaded_log('could not open file for purge: ' . $path);
             continue;
         }
 
+        siteloaded_debug('purging: ' . $path);
+
         if (SITELOADED_PLATFORM_WINDOWS) {
             $f->close();
-            if (!@unlink($filename)) {
-                siteloaded_log('could not delete file for purge: ' . $filename);
+            if (!@unlink($path)) {
+                siteloaded_log('could not delete file for purge: ' . $path);
             }
             continue;
         }
 
-        if (!@unlink($filename)) {
-            siteloaded_log('could not delete file for purge: ' . $filename);
+        if (!@unlink($path)) {
+            siteloaded_log('could not delete file for purge: ' . $path);
         }
 
         $f->close();
@@ -111,33 +114,32 @@ function siteloaded_cache_destroy($blog_id) {
     @rmdir($base);
 }
 
-function siteloaded_cache_purge_post($blog_id, $post_id) {
-    $url = get_permalink($post_id);
-    if ($url === FALSE) {
+function siteloaded_cache_purge_filename($blog_id, $filename) {
+    if (strlen($filename) === 0) {
         return;
     }
 
-    siteloaded_debug('purging post from cache: ' . $url);
-
-    $filename = siteloaded_cache_dir($blog_id) . sha1($url) . '.html';
+    $path = siteloaded_cache_dir($blog_id) . $filename;
     $f = new siteloaded_file_access();
-    $fp = $f->open_excl($filename, 'rb');
+    $fp = $f->open_excl($path, 'rb');
 
     if ($fp === FALSE) {
         // might not be in cache, ignore error
         return;
     }
 
+    siteloaded_debug('purging: ' . $path);
+
     if (SITELOADED_PLATFORM_WINDOWS) {
         $f->close();
-        if (!@unlink($filename)) {
-            siteloaded_log('could not delete file for purge: ' . $filename);
+        if (!@unlink($path)) {
+            siteloaded_log('could not delete file for purge: ' . $path);
         }
         return;
     }
 
-    if (!@unlink($filename)) {
-        siteloaded_log('could not delete file for purge: ' . $filename);
+    if (!@unlink($path)) {
+        siteloaded_log('could not delete file for purge: ' . $path);
     }
 
     $f->close();
@@ -275,23 +277,4 @@ function siteloaded_cache_ensure_valid($blog_id) {
     }
 
     siteloaded_ensure_htaccess_file();
-}
-
-function __siteloaded_comment_posted($id, $approved) {
-    if ($approved !== 1) {
-        return;
-    }
-    $comment = get_comment($id);
-    if ($comment === null) {
-        return;
-    }
-    siteloaded_cache_purge_post(get_current_blog_id(), $comment->comment_post_ID);
-}
-
-function __siteloaded_comment_status_changed($new_status, $old_status, $comment) {
-    if ($old_status === $new_status || ($new_status !== 'approved' && $old_status !== 'approved')) {
-        return;
-    }
-
-    siteloaded_cache_purge_post(get_current_blog_id(), $comment->comment_post_ID);
 }

@@ -59,8 +59,7 @@ function __siteloaded_admin_bar_purge_all() {
     $blog_id = get_current_blog_id();
 
     if (!current_user_can('manage_options')) {
-        header('Content-Type: application/json');
-        echo '{"code":401}';
+        wp_send_json_error(null, 401);
         wp_die();
     }
 
@@ -89,12 +88,13 @@ function __siteloaded_admin_menu() {
 
 function siteloaded_cp_content() {
     $subscription = get_option('siteloaded_subscription_id');
+    $blog_id = get_current_blog_id();
     if ($subscription === false) {
         $subscription = "";
     }
     ?>
     <div class="wrap">
-        <iframe class="siteloaded-control-panel" src="<?= SITELOADED_CONTROLPANEL_URL ?>?platform=wordpress&referrer=<?= urlencode(get_site_url()) ?>&locale=<?= urlencode(get_locale()) ?>&subscription=<?= urlencode($subscription) ?>"></iframe>
+        <iframe class="siteloaded-control-panel" src="<?= SITELOADED_CONTROLPANEL_URL ?>?platform=wordpress&referrer=<?= urlencode(get_site_url($blog_id)) ?>&locale=<?= urlencode(get_locale()) ?>&subscription=<?= urlencode($subscription) ?>"></iframe>
     </div>
     <?php
 }
@@ -228,17 +228,21 @@ function __siteloaded_editpost_purge() {
     $blog_id = get_current_blog_id();
 
     if (!current_user_can('manage_options')) {
-        header('Content-Type: application/json');
-        echo '{"code":401}';
+        wp_send_json_error(null, 401);
         wp_die();
     }
 
     if (!isset($_POST['post_id'])) {
-        header('Content-Type: application/json');
-        echo '{"code":422}';
+        wp_send_json_error(null, 422);
+        wp_die();
+    }
+
+    $url = get_permalink($_POST['post_id']);
+    if ($url === FALSE) {
+        wp_send_json_error(null, 500);
         wp_die();
     }
 
     siteloaded_close_http_client_connection(200, 'application/json; charset=UTF-8', '{}');
-    siteloaded_cache_purge_post($blog_id, $_POST['post_id']);
+    siteloaded_cache_purge_filename($blog_id, sha1($url) . '.html');
 }
