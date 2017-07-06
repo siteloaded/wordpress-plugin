@@ -10,20 +10,21 @@
             var opened = $.featherlight.current();
             opened && opened.close();
         };
-        var safeClose = setTimeout(close, 6000);
 
-        $.post(siteloaded_admin_bar_script.ajax_url, {
-            action: siteloaded_admin_bar_script.purge_all_action,
-            nonce: siteloaded_admin_bar_script.ajax_nonce
-        }).always(function(res) {
-            clearTimeout(safeClose);
-
-            if (!res || res.code !== 200) {
+        $.ajax({
+            method: 'POST',
+            url: siteloaded_admin_bar_script.ajax_url,
+            timeout: 6000,
+            data: {
+                action: siteloaded_admin_bar_script.purge_all_action
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            if (textStatus === 'timeout') {
                 close();
-                $.featherlight(siteloaded_admin_bar_script.failed_message, { type: 'text' });
                 return;
             }
-
+            $.featherlight(siteloaded_admin_bar_script.failed_message, { type: 'text' });
+        }).done(function(res) {
             setTimeout(close, Math.max(1500 - (new Date().valueOf() - start), 0));
         });
     }

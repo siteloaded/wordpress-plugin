@@ -15,20 +15,22 @@
             var opened = $.featherlight.current();
             opened && opened.close();
         };
-        var safeClose = setTimeout(close, 6000);
 
-        $.post(ajaxurl, {
-            action: siteloaded_editpost_script.purge_post_cache_action,
-            post_id: postId
-        }).always(function(res) {
-            clearTimeout(safeClose);
-
-            if (!res || res.code !== 200) {
+        $.ajax({
+            method: 'POST',
+            url: ajaxurl,
+            timeout: 6000,
+            data: {
+                action: siteloaded_editpost_script.purge_post_cache_action,
+                post_id: postId
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            if (textStatus === 'timeout') {
                 close();
-                $.featherlight(siteloaded_editpost_script.failed_message, { type: 'text' });
                 return;
             }
-
+            $.featherlight(siteloaded_editpost_script.failed_message, { type: 'text' });
+        }).done(function(res) {
             setTimeout(close, Math.max(1500 - (new Date().valueOf() - start), 0));
         });
     }

@@ -1,9 +1,10 @@
 <?php
 defined('ABSPATH') or exit;
 
-function siteloaded_close_http_client_connection($content_type, $response) {
+function siteloaded_close_http_client_connection($code, $content_type, $response) {
     ignore_user_abort(TRUE);
     ob_end_clean();
+    http_response_code($code);
     header('Content-Type: ' . $content_type);
     header('Content-Length: ' . mb_strlen($response, '8bit'));
     header('Connection: close');
