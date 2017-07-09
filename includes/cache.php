@@ -1,6 +1,10 @@
 <?php
 defined('ABSPATH') or exit;
 
+function siteloaded_cache_safe_purge_current_blog() {
+    siteloaded_cache_safe_purge(get_current_blog_id());
+}
+
 function siteloaded_cache_safe_purge($blog_id) {
     $base = siteloaded_cache_dir($blog_id);
 

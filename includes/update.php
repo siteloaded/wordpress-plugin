@@ -7,7 +7,7 @@ add_filter('plugins_api', 'siteloaded_fill_version_details_popup', 10, 3);
 function siteloaded_check_for_updates($transient) {
     if (siteloaded_ratelimit_cando('siteloaded_check_for_updates', 2 * HOUR_IN_SECONDS) === false) {
         return $transient;
-    };
+    }
 
     siteloaded_log('checking for updates');
     $rel = siteloaded_fetch_latest_release_infos();
@@ -24,7 +24,8 @@ function siteloaded_check_for_updates($transient) {
     }
 
     $update = new stdClass();
-    $update->slug = SITELOADED_SLUG . '.php';
+    $update->slug = SITELOADED_SLUG;
+    $update->plugin = SITELOADED_MAIN_PLUGIN_FILE;
     $update->new_version = $ver;
     $update->url = $rel->html_url;
     $update->package = $rel->assets[0]->browser_download_url;

@@ -29,9 +29,9 @@ function __siteloaded_admin_bar_menu($wp_admin_bar) {
 
     $wp_admin_bar->add_node(array(
         'parent' => SITELOADED_SLUG,
-		'id' 	 => 'siteloaded-purge-all',
+        'id'     => 'siteloaded-purge-all',
         'title'  => __('Empty Cache', 'siteloaded'),
-        'href' 	 => '#',
+        'href'   => '#',
         'meta'   => array('class' => 'siteloaded-admin-bar-purge-all')
     ));
 }
@@ -159,10 +159,10 @@ function __siteloaded_admin_notices_no_subscription() {
         return;
     }
 
-	$class = 'notice notice-info';
-	$message = __('Thank you for using Site Loaded. You must now create an account or login to an existing one to link your subscription to your blog. Click <a href="' . admin_url('admin.php?page=' . SITELOADED_SLUG) . '">here</a> to do so.', 'siteloaded');
+    $class = 'notice notice-info';
+    $message = __('Thank you for using Site Loaded. You must now create an account or login to an existing one to link your subscription to your blog. Click <a href="' . admin_url('admin.php?page=' . SITELOADED_SLUG) . '">here</a> to do so.', 'siteloaded');
 
-	printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class),  $message);
+    printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class),  $message);
 }
 
 function __siteloaded_ensure_valid_config() {
