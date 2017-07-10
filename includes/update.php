@@ -5,11 +5,6 @@ add_filter('pre_set_site_transient_update_plugins', 'siteloaded_check_for_update
 add_filter('plugins_api', 'siteloaded_fill_version_details_popup', 10, 3);
 
 function siteloaded_check_for_updates($transient) {
-    if (siteloaded_ratelimit_cando('siteloaded_check_for_updates', 2 * HOUR_IN_SECONDS) === false) {
-        return $transient;
-    }
-
-    siteloaded_log('checking for updates');
     $rel = siteloaded_fetch_latest_release_infos();
     if ($rel === FALSE) {
         return $transient;
@@ -68,28 +63,13 @@ function siteloaded_fill_version_details_popup($result, $action, $args) {
     return (object)$plugin;
 }
 
-function siteloaded_ratelimit_cando($key, $interval) {
-    $now = time();
-    $last = get_site_transient($key);
-    if ($last === FALSE) {
-        $last = 0;
-    }
-
-    $elapsed = $now - (int)$last;
-    if ($interval > $elapsed) {
-        return FALSE;
-    }
-
-    set_site_transient($key, $now, $interval + 15);
-    return TRUE;
-}
-
 function siteloaded_fetch_latest_release_infos() {
-    static $rel = FALSE;
-
+    $rel = get_site_transient('siteloaded-latest-release-remote-infos');
     if ($rel !== FALSE) {
         return $rel;
     }
+
+    siteloaded_log('fetching latest release infos');
 
     $github = new SiteLoaded\Vendor\Milo\Github\Api;
     $response = $github->get("/repos/:org/:repo/releases/latest", array(
@@ -110,5 +90,6 @@ function siteloaded_fetch_latest_release_infos() {
     }
 
     $rel = $decoded;
+    set_site_transient('siteloaded-latest-release-remote-infos', $rel, 2 * HOUR_IN_SECONDS);
     return $rel;
 }
