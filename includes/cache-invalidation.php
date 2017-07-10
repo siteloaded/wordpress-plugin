@@ -163,6 +163,6 @@ function __siteloaded_cache_purge_post_after_comment_status_changed($new_status,
 function siteloaded_get_safe_permalink($post) {
     list($permalink, $postname) = get_sample_permalink($post);
     $url = preg_replace('/\%[a-zA-Z_-]+\%/', $postname, $permalink);
-    $url = str_replace('%postname%', $postname, str_replace('__trashed', '', $url));
+    $url = str_replace('__trashed', '', $url);
     return $url;
 }
