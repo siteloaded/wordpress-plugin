@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  wait_for_db:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - db
+    command:
+      - db:3306
+
+  wait_for_wordpress:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - wordpress
+    command:
+      - wordpress:80
+
+  wordpress:
+    image: wordpress:php7.4
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: user
+      WORDPRESS_DB_PASSWORD: pass
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./src/:/var/www/html/wp-content/plugins/siteloaded
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: admin

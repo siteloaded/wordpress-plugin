@@ -24,22 +24,22 @@ if [ -f "$ARCHIVE" ]; then
     rm "$ARCHIVE"
 fi
 
-echo "- checkouting $TAG"
-git checkout "$TAG" --quiet
-retval=$?
-if [ $retval -ne 0 ]; then
-    exit $retval
-fi
+# echo "- checkouting $TAG"
+# git checkout "$TAG" --quiet
+# retval=$?
+# if [ $retval -ne 0 ]; then
+#     exit $retval
+# fi
 
 echo "- creating $BUILD_DIR"
 mkdir -p "$ARCHIVE_LOC"
 
 echo "- copying..."
 cp -R \
-    ./LICENSE \
-    ./README.md \
-    ./*.php \
-    {admin,includes,languages,vendor} \
+    ./src/LICENSE \
+    ./src/README.md \
+    ./src/*.php \
+    ./src/{admin,includes,vendor} \
     "$ARCHIVE_LOC"
 
 echo "- zipping archive"

@@ -1,0 +1,298 @@
+[
+    {
+        "name": "masterminds/html5",
+        "version": "2.7.0",
+        "version_normalized": "2.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Masterminds/html5-php.git",
+            "reference": "104443ad663d15981225f99532ba73c2f1d6b6f2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/104443ad663d15981225f99532ba73c2f1d6b6f2",
+            "reference": "104443ad663d15981225f99532ba73c2f1d6b6f2",
+            "shasum": ""
+        },
+        "require": {
+            "ext-ctype": "*",
+            "ext-dom": "*",
+            "ext-libxml": "*",
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.35",
+            "sami/sami": "~2.0",
+            "satooshi/php-coveralls": "1.0.*"
+        },
+        "time": "2019-07-25T07:03:26+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.7-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Masterminds\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Matt Butcher",
+                "email": "technosophos@gmail.com"
+            },
+            {
+                "name": "Matt Farina",
+                "email": "matt@mattfarina.com"
+            },
+            {
+                "name": "Asmir Mustafic",
+                "email": "goetas@gmail.com"
+            }
+        ],
+        "description": "An HTML5 parser and serializer.",
+        "homepage": "http://masterminds.github.io/html5-php",
+        "keywords": [
+            "HTML5",
+            "dom",
+            "html",
+            "parser",
+            "querypath",
+            "serializer",
+            "xml"
+        ]
+    },
+    {
+        "name": "michelf/php-markdown",
+        "version": "1.9.0",
+        "version_normalized": "1.9.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/michelf/php-markdown.git",
+            "reference": "c83178d49e372ca967d1a8c77ae4e051b3a3c75c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/michelf/php-markdown/zipball/c83178d49e372ca967d1a8c77ae4e051b3a3c75c",
+            "reference": "c83178d49e372ca967d1a8c77ae4e051b3a3c75c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": ">=4.3 <5.8"
+        },
+        "time": "2019-12-02T02:32:27+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Michelf\\": "Michelf/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Michel Fortin",
+                "email": "michel.fortin@michelf.ca",
+                "homepage": "https://michelf.ca/",
+                "role": "Developer"
+            },
+            {
+                "name": "John Gruber",
+                "homepage": "https://daringfireball.net/"
+            }
+        ],
+        "description": "PHP Markdown",
+        "homepage": "https://michelf.ca/projects/php-markdown/",
+        "keywords": [
+            "markdown"
+        ]
+    },
+    {
+        "name": "milo/github-api",
+        "version": "v1.4.7",
+        "version_normalized": "1.4.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/milo/github-api.git",
+            "reference": "f72f6a1699f9a648dafdb278cbf9a6dc258b4e1f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/milo/github-api/zipball/f72f6a1699f9a648dafdb278cbf9a6dc258b4e1f",
+            "reference": "f72f6a1699f9a648dafdb278cbf9a6dc258b4e1f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "nette/tester": "~1.7.0"
+        },
+        "suggest": {
+            "ext-curl": "Allows you to use Http\\CurlClient"
+        },
+        "time": "2020-01-03T17:19:16+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/Github/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Miloslav Hůla",
+                "email": "miloslav.hula@gmail.com",
+                "homepage": "https://github.com/milo"
+            }
+        ],
+        "description": "Github API easy access"
+    },
+    {
+        "name": "pguardiario/phpuri",
+        "version": "1.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/monkeysuffrage/phpuri.git",
+            "reference": "ad0a5ec033fe616cfef55578b9c7f2458be8fbfc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/monkeysuffrage/phpuri/zipball/ad0a5ec033fe616cfef55578b9c7f2458be8fbfc",
+            "reference": "ad0a5ec033fe616cfef55578b9c7f2458be8fbfc",
+            "shasum": ""
+        },
+        "time": "2015-05-24T09:13:17+00:00",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "phpuri.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "description": "A php library for converting relative urls to absolute."
+    },
+    {
+        "name": "riverline/multipart-parser",
+        "version": "2.0.8",
+        "version_normalized": "2.0.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Riverline/multipart-parser.git",
+            "reference": "2fe9026789754c1ff07c06047f0acc113e90933a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Riverline/multipart-parser/zipball/2fe9026789754c1ff07c06047f0acc113e90933a",
+            "reference": "2fe9026789754c1ff07c06047f0acc113e90933a",
+            "shasum": ""
+        },
+        "require": {
+            "ext-mbstring": "*",
+            "php": ">=5.6.0"
+        },
+        "require-dev": {
+            "laminas/laminas-diactoros": "^1.8.7",
+            "phpunit/phpunit": "^5.2 || ^6.0 || ^7.0",
+            "psr/http-message": "^1.0",
+            "symfony/psr-http-message-bridge": "^1.1"
+        },
+        "time": "2020-01-24T09:39:24+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Riverline\\MultiPartParser\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Romain Cambien",
+                "email": "romain@cambien.net"
+            },
+            {
+                "name": "Riverline",
+                "homepage": "http://www.riverline.fr"
+            }
+        ],
+        "description": "One class library to parse multipart content with encoding and charset support.",
+        "keywords": [
+            "http",
+            "multipart",
+            "parser"
+        ]
+    },
+    {
+        "name": "rmccue/requests",
+        "version": "v1.7.0",
+        "version_normalized": "1.7.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/rmccue/Requests.git",
+            "reference": "87932f52ffad70504d93f04f15690cf16a089546"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/rmccue/Requests/zipball/87932f52ffad70504d93f04f15690cf16a089546",
+            "reference": "87932f52ffad70504d93f04f15690cf16a089546",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2"
+        },
+        "require-dev": {
+            "requests/test-server": "dev-master"
+        },
+        "time": "2016-10-13T00:11:37+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Requests": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "ISC"
+        ],
+        "authors": [
+            {
+                "name": "Ryan McCue",
+                "homepage": "http://ryanmccue.info"
+            }
+        ],
+        "description": "A HTTP library written in PHP, for human beings.",
+        "homepage": "http://github.com/rmccue/Requests",
+        "keywords": [
+            "curl",
+            "fsockopen",
+            "http",
+            "idna",
+            "ipv6",
+            "iri",
+            "sockets"
+        ]
+    }
+]

@@ -1,0 +1,10 @@
+{
+    "require": {
+        "milo/github-api": "^1.4",
+        "michelf/php-markdown": "^1.7",
+        "pguardiario/phpuri": "^1.0",
+        "masterminds/html5": "^2.2",
+        "riverline/multipart-parser": "^2.0",
+        "rmccue/requests": "^1.7"
+    }
+}
